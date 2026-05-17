@@ -35,6 +35,8 @@ let currentAngle = 0;
 let spinSpeed = 0;
 const segments = foods.length;
 const segmentAngle = (2 * Math.PI) / segments;
+// 光晕动画变量
+let glowTime = 0;
 
 // ============================================
 // 控制转动时间的参数 - 在这里修改！
@@ -108,22 +110,90 @@ function drawWheel(angle) {
         ctx.fillText(foods[i], textRadius, 6);
         ctx.restore();
     }
+    // ============================================
+    // 转盘外圈动态光晕效果（精致常驻版）
+    // ============================================
+    glowTime += 0.025;
+    const glowAlpha1 = 0.3 + Math.sin(glowTime) * 0.25;
+    const glowAlpha2 = 0.45 + Math.sin(glowTime * 1.6) * 0.3;
+    const glowAlpha3 = 0.55 + Math.sin(glowTime * 0.9) * 0.35;
+    const glowBlur1 = 6 + Math.sin(glowTime) * 5;
+    const glowBlur2 = 4 + Math.sin(glowTime * 1.6) * 4;
+    const glowBlur3 = 2 + Math.sin(glowTime * 0.9) * 3;
 
-    // 绘制中心圆
+    // 外层光晕（紧贴边缘外侧）
     ctx.beginPath();
-    ctx.arc(centerX, centerY, 30, 0, 2 * Math.PI);
-    ctx.fillStyle = '#fff';
-    ctx.fill();
-    ctx.strokeStyle = '#333';
+    ctx.arc(centerX, centerY, radius + 3, 0, 2 * Math.PI);
+    ctx.strokeStyle = `rgba(255, 200, 180, ${glowAlpha1})`;
+    ctx.lineWidth = 5;
+    ctx.shadowColor = `rgba(255, 180, 150, ${glowAlpha1 + 0.2})`;
+    ctx.shadowBlur = glowBlur1;
+    ctx.stroke();
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+
+    // 中层光晕（紧贴边缘）
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius + 1, 0, 2 * Math.PI);
+    ctx.strokeStyle = `rgba(255, 220, 200, ${glowAlpha2})`;
     ctx.lineWidth = 3;
+    ctx.shadowColor = `rgba(255, 200, 170, ${glowAlpha2 + 0.2})`;
+    ctx.shadowBlur = glowBlur2;
+    ctx.stroke();
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+
+    // 内层光晕（边缘内侧）
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius - 1, 0, 2 * Math.PI);
+    ctx.strokeStyle = `rgba(255, 235, 220, ${glowAlpha3})`;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = `rgba(255, 220, 190, ${glowAlpha3 + 0.2})`;
+    ctx.shadowBlur = glowBlur3;
+    ctx.stroke();
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+
+    // 绘制中心圆 - 紧贴外圈的动态光晕
+    const centerGlowAlpha = 0.3 + Math.sin(glowTime * 1.2) * 0.25;
+    const centerGlowBlur = 2 + Math.sin(glowTime * 1.2) * 2;
+
+    // 中心圆外圈动态光晕（紧贴边缘）
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 31.5, 0, 2 * Math.PI);
+    ctx.strokeStyle = `rgba(255, 200, 160, ${centerGlowAlpha})`;
+    ctx.lineWidth = 2;
+    ctx.shadowColor = `rgba(255, 180, 140, ${centerGlowAlpha + 0.2})`;
+    ctx.shadowBlur = centerGlowBlur;
+    ctx.stroke();
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+
+    // 主圆 - 柔和金橙色 + 微弱边缘光
+    const centerMainGradient = ctx.createRadialGradient(centerX - 2, centerY - 2, 3, centerX, centerY, 28);
+    centerMainGradient.addColorStop(0, 'rgba(255, 250, 245, 1)');
+    centerMainGradient.addColorStop(0.5, 'rgba(250, 225, 205, 1)');
+    centerMainGradient.addColorStop(1, 'rgba(240, 195, 165, 1)');
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 31, 0, 2 * Math.PI);
+    ctx.fillStyle = centerMainGradient;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx.lineWidth = 1.5;
     ctx.stroke();
 
+    // 高光点
+    ctx.beginPath();
+    ctx.arc(centerX - 6, centerY - 7, 4, 0, 2 * Math.PI);
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+    ctx.fill();
+
     // 中心文字
-    ctx.fillStyle = '#333';
-    ctx.font = 'bold 14px "Microsoft YaHei", Arial';
+    ctx.fillStyle = 'rgba(40, 40, 40, 0.99)';
+    ctx.font = 'bold 16px "Microsoft YaHei", Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('GO', centerX, centerY);
+    ctx.fillText('柯基猪', centerX, centerY);
 }
 
 // ============================================

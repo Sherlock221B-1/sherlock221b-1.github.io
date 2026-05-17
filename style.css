@@ -28,7 +28,7 @@ body {
 
 .container {
     text-align: center;
-    background: rgba(255, 255, 255, 0.2); /* 转盘背景颜色透明度 */
+    background: rgba(255, 255, 255, 0.2); /*转盘背景颜色透明度*/
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -47,6 +47,9 @@ h1 {
     position: relative;
     display: inline-block;
     margin: 20px 0;
+    /* 让转盘容器也能自适应宽度 */
+    width: 100%;
+    max-width: 500px;
 }
 
 /* 指针样式 - 爱心 */
@@ -69,10 +72,9 @@ h1 {
             100% 40%
     );
     filter: drop-shadow(0 4px 10px rgba(255, 71, 87, 0.6));
-    animation: pointerBounce 1.8s infinite; /* 跳动时间 */
+    animation: pointerBounce 1.8s infinite; /*跳动时间*/
 }
-
-/* 跳动规律 */
+/*跳动规律*/
 @keyframes pointerBounce {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50% { transform: translateX(-50%) translateY(-2.8px); }
@@ -80,12 +82,16 @@ h1 {
 
 canvas {
     display: block;
-    max-width: 100%;
-    height: auto;
+    max-width: 100%; /* 这行确保画布能自动缩小 */
+    height: auto;    /* 保持宽高比 */
+    margin: 0 auto;  /* 水平居中 */
 }
 
 .spin-button {
-    /* 带透明度的渐变色 */
+    /* 不带透明度的渐变色*/
+    /*background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);*/
+
+    /* 改成带透明度的渐变色 */
     background: linear-gradient(135deg, rgba(240, 147, 251, 0.95), rgba(245, 87, 108, 0.95));
     color: white;
     border: none;
@@ -116,7 +122,9 @@ canvas {
     box-shadow: none;
 }
 
+/* ============================================ */
 /* 弹窗遮罩层 */
+/* ============================================ */
 .result-overlay {
     display: none;
     position: fixed;
@@ -136,7 +144,9 @@ canvas {
     animation: fadeIn 0.3s ease;
 }
 
+/* ============================================ */
 /* 弹窗主体 - 屏幕正中间 */
+/* ============================================ */
 .result {
     background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
     border-radius: 20px;
@@ -270,8 +280,47 @@ canvas {
     }
 }
 
-/* 响应式设计 */
+/* ============================================ */
+/* 手机端响应式设计 (屏幕宽度 <= 600px) */
+/* ============================================ */
 @media (max-width: 600px) {
+    body {
+        padding: 10px; /* 减少内边距，留更多空间给转盘 */
+    }
+
+    .container {
+        padding: 20px 15px; /* 缩小容器内边距 */
+        border-radius: 15px;
+    }
+
+    h1 {
+        font-size: 1.8em; /* 缩小标题字号 */
+        margin-bottom: 15px;
+    }
+
+    .wheel-container {
+        margin: 10px 0;
+    }
+
+    /* 移动端爱心指针稍小一点，更协调 */
+    .pointer {
+        top: -25px;
+        width: 35px;
+        height: 35px;
+    }
+
+    @keyframes pointerBounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-2px); } /* 手机端跳动幅度稍小 */
+    }
+
+    .spin-button {
+        padding: 12px 40px;
+        font-size: 1.1em;
+        margin-top: 20px;
+    }
+
+    /* 弹窗在手机端自适应 */
     .result {
         min-width: 280px;
         max-width: 90%;
