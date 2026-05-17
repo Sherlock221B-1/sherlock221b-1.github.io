@@ -51,13 +51,38 @@ const SPEED_CONFIG = {
 };
 // ============================================
 
+
+// ============================================
+// 高清屏适配 - 解决文字模糊问题 文字高清化(搭配"高清化后"三行代码使用)
+// ============================================
+function setupCanvas() {
+    const dpr = window.devicePixelRatio || 1;
+    const displayWidth = canvas.clientWidth || 500;
+    const displayHeight = canvas.clientHeight || 500;
+    canvas.width = displayWidth * dpr;
+    canvas.height = displayHeight * dpr;
+    canvas.style.width = displayWidth + 'px';
+    canvas.style.height = displayHeight + 'px';
+    ctx.scale(dpr, dpr);
+}
+setupCanvas();
+window.addEventListener('resize', () => {
+    setupCanvas();
+    drawWheel(currentAngle);
+});
+
 // 绘制转盘
 function drawWheel(angle) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //高清化前
+    // const centerX = canvas.width / 2;
+    // const centerY = canvas.height / 2;
+    // const radius = canvas.width / 2 - 10;
 
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = canvas.width / 2 - 10;
+    //高清化后
+    const centerX = (canvas.clientWidth || 500) / 2;
+    const centerY = (canvas.clientHeight || 500) / 2;
+    const radius = Math.min(centerX, centerY) - 10;
 
     // 绘制各个扇区
     for (let i = 0; i < segments; i++) {
@@ -189,7 +214,7 @@ function drawWheel(angle) {
     ctx.fill();
 
     // 中心文字
-    ctx.fillStyle = 'rgba(40, 40, 40, 0.99)';
+    ctx.fillStyle = 'rgba(30, 30, 30, 0.99)';
     ctx.font = 'bold 16px "Microsoft YaHei", Arial';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
