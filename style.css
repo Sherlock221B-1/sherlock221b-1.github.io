@@ -7,7 +7,7 @@
 body {
     font-family: 'Microsoft YaHei', Arial, sans-serif;
 
-    /* 背景图片设置 */
+    /* 背景图片设置 - 确保图片名和你的文件名完全一致 */
     background-image: url('yier.jpg');
     background-size: cover;
     background-position: center;
@@ -24,21 +24,11 @@ body {
     padding: 20px;
 }
 
-/* 添加半透明遮罩让转盘更突出 */
-/*body::before {*/
-/*    content: '';*/
-/*    position: fixed;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    width: 100%;*/
-/*    height: 100%;*/
-/*    background: rgba(0, 0, 0, 0.1);*/
-/*    z-index: -1;*/
-/*}*/
+/* 半透明遮罩已经注释掉，所以不会生效，如果不需要可以忽略 */
 
 .container {
     text-align: center;
-    background: rgba(255, 255, 255, 0.2);/*转盘背景颜色透明度*/
+    background: rgba(255, 255, 255, 0.2); /* 转盘背景颜色透明度 */
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -59,7 +49,7 @@ h1 {
     margin: 20px 0;
 }
 
-/* 指针样式 */
+/* 指针样式 - 爱心 */
 .pointer {
     position: absolute;
     top: -35px;
@@ -79,9 +69,10 @@ h1 {
             100% 40%
     );
     filter: drop-shadow(0 4px 10px rgba(255, 71, 87, 0.6));
-    animation: pointerBounce 1.8s infinite;/*跳动时间*/
+    animation: pointerBounce 1.8s infinite; /* 跳动时间 */
 }
-/*跳动规律*/
+
+/* 跳动规律 */
 @keyframes pointerBounce {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50% { transform: translateX(-50%) translateY(-2.8px); }
@@ -94,10 +85,7 @@ canvas {
 }
 
 .spin-button {
-    /*不带透明度的渐变色*/
-    /*background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);*/
-
-    /* 改成带透明度的渐变色 */
+    /* 带透明度的渐变色 */
     background: linear-gradient(135deg, rgba(240, 147, 251, 0.95), rgba(245, 87, 108, 0.95));
     color: white;
     border: none;
@@ -128,9 +116,7 @@ canvas {
     box-shadow: none;
 }
 
-/* ============================================ */
 /* 弹窗遮罩层 */
-/* ============================================ */
 .result-overlay {
     display: none;
     position: fixed;
@@ -150,9 +136,7 @@ canvas {
     animation: fadeIn 0.3s ease;
 }
 
-/* ============================================ */
 /* 弹窗主体 - 屏幕正中间 */
-/* ============================================ */
 .result {
     background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
     border-radius: 20px;
