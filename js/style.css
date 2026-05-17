@@ -1,0 +1,304 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Microsoft YaHei', Arial, sans-serif;
+
+    /* 背景图片设置 */
+    background-image: url('yier.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+    /* 如果图片加载失败，显示备用颜色 */
+    background-color: #667eea;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* 添加半透明遮罩让转盘更突出 */
+/*body::before {*/
+/*    content: '';*/
+/*    position: fixed;*/
+/*    top: 0;*/
+/*    left: 0;*/
+/*    width: 100%;*/
+/*    height: 100%;*/
+/*    background: rgba(0, 0, 0, 0.1);*/
+/*    z-index: -1;*/
+/*}*/
+
+.container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.2);/*转盘背景颜色透明度*/
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 600px;
+    width: 100%;
+}
+
+h1 {
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.wheel-container {
+    position: relative;
+    display: inline-block;
+    margin: 20px 0;
+}
+
+/* 指针样式 */
+.pointer {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 45px;
+    height: 45px;
+    background: #ff4757;
+    z-index: 10;
+    /* 更圆润的心形 */
+    clip-path: polygon(
+            50% 100%,
+            0% 40%,
+            15% 10%,
+            50% 30%,
+            85% 10%,
+            100% 40%
+    );
+    filter: drop-shadow(0 4px 10px rgba(255, 71, 87, 0.6));
+    animation: pointerBounce 1.8s infinite;/*跳动时间*/
+}
+/*跳动规律*/
+@keyframes pointerBounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(-2.8px); }
+}
+
+canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.spin-button {
+    /*不带透明度的渐变色*/
+    /*background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);*/
+
+    /* 改成带透明度的渐变色 */
+    background: linear-gradient(135deg, rgba(240, 147, 251, 0.95), rgba(245, 87, 108, 0.95));
+    color: white;
+    border: none;
+    padding: 15px 50px;
+    font-size: 1.3em;
+    font-weight: bold;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+    position: relative;
+    overflow: hidden;
+}
+
+.spin-button:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+}
+
+.spin-button:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.spin-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* ============================================ */
+/* 弹窗遮罩层 */
+/* ============================================ */
+.result-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(5px);
+}
+
+.result-overlay.show {
+    display: flex;
+    animation: fadeIn 0.3s ease;
+}
+
+/* ============================================ */
+/* 弹窗主体 - 屏幕正中间 */
+/* ============================================ */
+.result {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    border-radius: 20px;
+    padding: 40px 50px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    position: relative;
+    min-width: 350px;
+    max-width: 500px;
+    text-align: center;
+    transform: scale(0.5);
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.result-overlay.show .result {
+    transform: scale(1);
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.result-text {
+    margin-bottom: 25px;
+}
+
+.result-emoji {
+    font-size: 3em;
+    margin-bottom: 15px;
+    animation: pulse 2s infinite;
+}
+
+.result-title {
+    font-size: 1.3em;
+    color: #666;
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.result-food {
+    font-size: 2.5em;
+    font-weight: bold;
+    color: #e74c3c;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+}
+
+.close-btn {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    font-size: 1.1em;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(238, 90, 36, 0.3);
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.close-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(238, 90, 36, 0.5);
+    background: linear-gradient(135deg, #ff5252 0%, #d63031 100%);
+}
+
+.close-btn:active {
+    transform: translateY(0);
+}
+
+/* 关闭按钮（右上角X） */
+.close-icon {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 1.8em;
+    color: #999;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.close-icon:hover {
+    color: #e74c3c;
+    background: rgba(0, 0, 0, 0.05);
+    transform: rotate(90deg);
+}
+
+/* 淡入动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* 弹入动画 */
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 表情脉冲动画 */
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+    .result {
+        min-width: 280px;
+        max-width: 90%;
+        padding: 30px 20px;
+    }
+
+    .result-food {
+        font-size: 2em;
+    }
+
+    .result-emoji {
+        font-size: 2.5em;
+    }
+}
