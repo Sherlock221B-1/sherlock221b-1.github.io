@@ -58,12 +58,12 @@ const SPEED_CONFIG = {
 function setupCanvas() {
     const dpr = window.devicePixelRatio || 1;
     const displayWidth = canvas.clientWidth || 500;
-    const displayHeight = canvas.clientHeight || 500;
+    const displayHeight = displayWidth; // 保持正方形
     canvas.width = displayWidth * dpr;
     canvas.height = displayHeight * dpr;
     canvas.style.width = displayWidth + 'px';
     canvas.style.height = displayHeight + 'px';
-    ctx.scale(dpr, dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); // 使用 setTransform 替代 scale，避免累积
 }
 setupCanvas();
 window.addEventListener('resize', () => {
@@ -80,9 +80,10 @@ function drawWheel(angle) {
     // const radius = canvas.width / 2 - 10;
 
     //高清化后
-    const centerX = (canvas.clientWidth || 500) / 2;
-    const centerY = (canvas.clientHeight || 500) / 2;
-    const radius = Math.min(centerX, centerY) - 10;
+    const displaySize = canvas.clientWidth || 500;
+    const centerX = displaySize / 2;
+    const centerY = displaySize / 2;
+    const radius = centerX - 10;
 
     // 绘制各个扇区
     for (let i = 0; i < segments; i++) {
@@ -128,7 +129,9 @@ function drawWheel(angle) {
         ctx.rotate(startAngle + segmentAngle / 2);
         ctx.textAlign = 'right';
         ctx.fillStyle = '#333';
-        ctx.font = 'bold 23px "Microsoft YaHei", Arial';
+        // ctx.font = 'bold 23px "Microsoft YaHei", Arial';
+        const fontSize = Math.min(displaySize * 0.046, 23); // 根据画布大小动态缩放
+        ctx.font = `bold ${fontSize}px "Microsoft YaHei", Arial`;
 
         // 文字位置
         const textRadius = radius * 0.79;
@@ -180,12 +183,13 @@ function drawWheel(angle) {
     ctx.shadowBlur = 0;
 
     // 绘制中心圆 - 紧贴外圈的动态光晕
+    const centerCircleRadius = displaySize * 0.062;
     const centerGlowAlpha = 0.3 + Math.sin(glowTime * 1.2) * 0.25;
     const centerGlowBlur = 2 + Math.sin(glowTime * 1.2) * 2;
 
     // 中心圆外圈动态光晕（紧贴边缘）
     ctx.beginPath();
-    ctx.arc(centerX, centerY, 31.5, 0, 2 * Math.PI);
+    ctx.arc(centerX, centerY, centerCircleRadius + 0.5, 0, 2 * Math.PI);
     ctx.strokeStyle = `rgba(255, 200, 160, ${centerGlowAlpha})`;
     ctx.lineWidth = 2;
     ctx.shadowColor = `rgba(255, 180, 140, ${centerGlowAlpha + 0.2})`;
@@ -195,12 +199,12 @@ function drawWheel(angle) {
     ctx.shadowBlur = 0;
 
     // 主圆 - 柔和金橙色 + 微弱边缘光
-    const centerMainGradient = ctx.createRadialGradient(centerX - 2, centerY - 2, 3, centerX, centerY, 28);
+    const centerMainGradient = ctx.createRadialGradient(centerX - 2, centerY - 2, centerCircleRadius * 0.1, centerX, centerY, centerCircleRadius);
     centerMainGradient.addColorStop(0, 'rgba(255, 250, 245, 1)');
     centerMainGradient.addColorStop(0.5, 'rgba(250, 225, 205, 1)');
     centerMainGradient.addColorStop(1, 'rgba(240, 195, 165, 1)');
     ctx.beginPath();
-    ctx.arc(centerX, centerY, 31, 0, 2 * Math.PI);
+    ctx.arc(centerX, centerY, centerCircleRadius, 0, 2 * Math.PI);
     ctx.fillStyle = centerMainGradient;
     ctx.fill();
     ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
@@ -208,14 +212,18 @@ function drawWheel(angle) {
     ctx.stroke();
 
     // 高光点
+    const highlightOffsetX = centerCircleRadius * 0.19;
+    const highlightOffsetY = centerCircleRadius * 0.22;
+    const highlightRadius = centerCircleRadius * 0.13;
     ctx.beginPath();
-    ctx.arc(centerX - 6, centerY - 7, 4, 0, 2 * Math.PI);
+    ctx.arc(centerX - highlightOffsetX, centerY - highlightOffsetY, highlightRadius, 0, 2 * Math.PI);
     ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
     ctx.fill();
 
     // 中心文字
+    const centerFontSize = Math.min(displaySize * 0.032, 16);
     ctx.fillStyle = 'rgba(30, 30, 30, 0.99)';
-    ctx.font = 'bold 16px "Microsoft YaHei", Arial';
+    ctx.font = `bold ${centerFontSize}px "Microsoft YaHei", Arial`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('柯基猪', centerX, centerY);
