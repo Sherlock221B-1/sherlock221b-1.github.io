@@ -7,15 +7,16 @@
 body {
     font-family: 'Microsoft YaHei', Arial, sans-serif;
 
-    /* 背景图片设置 - 确保图片名和你的文件名完全一致 */
-    background-image: url('yier.jpg');
+    /* 电脑端背景：横版16:9图片 */
+    background-image: url('yier-pc.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
 
     /* 如果图片加载失败，显示备用颜色 */
-    background-color: #667eea;
+    /* 若无设置该项加载失败时背景即为透明 */
+    background-color: transparent;/* 备用颜色设为透明相当于没有设置这一行 */
 
     display: flex;
     justify-content: center;
@@ -24,11 +25,9 @@ body {
     padding: 20px;
 }
 
-/* 半透明遮罩已经注释掉，所以不会生效，如果不需要可以忽略 */
-
 .container {
     text-align: center;
-    background: rgba(255, 255, 255, 0.2); /* 转盘背景颜色透明度 */
+    background: rgba(255, 255, 255, 0.2); /*转盘背景颜色透明度*/
     border-radius: 20px;
     padding: 40px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
@@ -41,12 +40,16 @@ h1 {
     margin-bottom: 30px;
     font-size: 2.5em;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+    letter-spacing:1.5px;
 }
 
 .wheel-container {
     position: relative;
     display: inline-block;
     margin: 20px 0;
+    /* 让转盘容器也能自适应宽度 */
+    width: 100%;
+    max-width: 500px;
 }
 
 /* 指针样式 - 爱心 */
@@ -69,10 +72,9 @@ h1 {
             100% 40%
     );
     filter: drop-shadow(0 4px 10px rgba(255, 71, 87, 0.6));
-    animation: pointerBounce 1.8s infinite; /* 跳动时间 */
+    animation: pointerBounce 1.8s infinite; /*跳动时间*/
 }
-
-/* 跳动规律 */
+/*跳动规律*/
 @keyframes pointerBounce {
     0%, 100% { transform: translateX(-50%) translateY(0); }
     50% { transform: translateX(-50%) translateY(-2.8px); }
@@ -80,12 +82,16 @@ h1 {
 
 canvas {
     display: block;
-    max-width: 100%;
-    height: auto;
+    max-width: 100%; /* 这行确保画布能自动缩小 */
+    height: auto;    /* 保持宽高比 */
+    margin: 0 auto;  /* 水平居中 */
 }
 
 .spin-button {
-    /* 带透明度的渐变色 */
+    /* 不带透明度的渐变色*/
+    /*background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);*/
+
+    /* 改成带透明度的渐变色 */
     background: linear-gradient(135deg, rgba(240, 147, 251, 0.95), rgba(245, 87, 108, 0.95));
     color: white;
     border: none;
@@ -116,7 +122,9 @@ canvas {
     box-shadow: none;
 }
 
+/* ============================================ */
 /* 弹窗遮罩层 */
+/* ============================================ */
 .result-overlay {
     display: none;
     position: fixed;
@@ -136,9 +144,12 @@ canvas {
     animation: fadeIn 0.3s ease;
 }
 
+/* ============================================ */
 /* 弹窗主体 - 屏幕正中间 */
+/* ============================================ */
 .result {
-    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    background: url('result.jpg') center/cover no-repeat,
+    linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
     border-radius: 20px;
     padding: 40px 50px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -154,65 +165,75 @@ canvas {
     transform: scale(1);
     animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
-
+ /* 结果显示界面 */
 .result-text {
     margin-bottom: 25px;
+    transform: translateX(-5px)translateY(-30px); /* 往上移，负值越大越往上 */
+    opacity: 0.95;                /* 透明度，0~1 */
 }
 
+/* 最上方的emoji表情 */
 .result-emoji {
     font-size: 3em;
     margin-bottom: 15px;
     animation: pulse 2s infinite;
+    opacity: 1;                /* 透明度，0~1 */
+    /* 上下左右偏移在动画 @keyframes pulse 里调 */
 }
 
 .result-title {
     font-size: 1.3em;
-    color: #666;
+    color: #444;
     margin-bottom: 10px;
-    font-weight: 500;
+    font-weight: 530;
+    transform: translateX(13px)
 }
 
 .result-food {
-    font-size: 2.5em;
+    font-size: 2.7em;
     font-weight: bold;
-    color: #e74c3c;
+    color: rgba(238, 60, 35,0.95);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 10px;
+    transform: translateX(1px)
 }
 
 .close-btn {
-    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
-    color: white;
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.8) 0%, rgba(238, 90, 36, 0.8) 100%);
+    color: rgba(255,255,255,0.9);
     border: none;
     padding: 12px 40px;
-    font-size: 1.1em;
+    font-size: 1.2em;
+    letter-spacing: 2px;
     border-radius: 25px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(238, 90, 36, 0.3);
     font-weight: bold;
     margin-top: 10px;
+    transform: translateY(15px);
 }
 
 .close-btn:hover {
-    transform: translateY(-2px);
+    transform: translateY(15px);  /* 要与按键移动数值保持一致才会使按键静止不动 */
     box-shadow: 0 6px 20px rgba(238, 90, 36, 0.5);
-    background: linear-gradient(135deg, #ff5252 0%, #d63031 100%);
+    background: linear-gradient(135deg, rgba(255, 82, 82, 0.85) 0%, rgba(214, 48, 49, 0.85) 100%);
 }
 
+/* 按住进行移动 */
 .close-btn:active {
-    transform: translateY(0);
+    transform: translateY(15px);  /* 要与按键移动数值保持一致才会使按键静止不动 */
 }
 
 /* 关闭按钮（右上角X） */
 .close-icon {
     position: absolute;
     top: 15px;
-    right: 20px;
+    right: 18px;
     background: none;
     border: none;
     font-size: 1.8em;
-    color: #999;
+    color: #888;
     cursor: pointer;
     transition: all 0.3s ease;
     width: 40px;
@@ -221,12 +242,18 @@ canvas {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+    /* 只对电脑端生效 */
+    @media(min-width: 601px) {
+        /* ===== 扩大响应区域，位置不变 ===== */
+        padding: 15px;       /* 原没有，扩大点击范围 */
+        margin: -15px;       /* 负值抵消 padding 的偏移 */
+    }
 }
 
 .close-icon:hover {
     color: #e74c3c;
     background: rgba(0, 0, 0, 0.05);
-    transform: rotate(90deg);
+    /*transform: rotate(90deg);  !* 旋转让悬停热区不稳定，暂时取消 *!*/
 }
 
 /* 淡入动画 */
@@ -257,32 +284,473 @@ canvas {
     }
 }
 
-/* 表情脉冲动画 */
+/* emoji表情脉冲动画 */
 @keyframes pulse {
     0% {
-        transform: scale(1);
+        transform: translateX(13px) scale(1);
     }
     50% {
-        transform: scale(1.2);
+        transform: translateX(13px) scale(1.2);
     }
     100% {
-        transform: scale(1);
+        transform: translateX(13px) scale(1);
     }
 }
 
-/* 响应式设计 */
+/* ============================================ */
+/* 手机端响应式设计 (屏幕宽度 <= 600px) */
+/* ============================================ */
 @media (max-width: 600px) {
-    .result {
-        min-width: 280px;
-        max-width: 90%;
-        padding: 30px 20px;
+    /* 手机端背景：竖版9:16图片，转盘放上半区 */
+    @media (max-width: 600px) {
+        body {
+            background-image: url('yier.jpg');
+            align-items: flex-start;
+            padding-top: 10px;
+            padding-left: 10px;
+            padding-right: 10px;
+            padding-bottom: 10px;
+            margin: -26.5px 0;  /* 让整个body块往上提 */
+        }
     }
 
-    .result-food {
+    .container {
+        background: transparent;
+        box-shadow: none;
+        padding: 20px 15px;
+        border-radius: 15px;
+    }
+
+    h1 {
         font-size: 2em;
+        margin-bottom: 15px;
+        letter-spacing:2px;
+    }
+
+    .wheel-container {
+        margin: 10px 0;
+        max-width: 395px; /* 原来是继承外面的500px，改小转盘变小 */
+                          /* 420-500没有变化，420以下有变化 */
+    }
+
+    .pointer {
+        top: -25px;
+        width: 35px;
+        height: 35px;
+    }
+
+    @keyframes pointerBounce {
+        0%, 100% { transform: translateX(-50%) translateY(0); }
+        50% { transform: translateX(-50%) translateY(-2px); }
+    }
+
+    /* ============================================ */
+    /* 手机端初始普通按钮样式（固定在底部，与平板按钮位置一致） */
+    /* ============================================ */
+    .spin-button.initial-btn {
+        position: fixed;
+        bottom: 11vh;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 0;
+        z-index: 100;
+
+        /* 与电脑端一致的样式 */
+        width: auto;
+        height: auto;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, rgba(255, 140, 160, 0.9), rgba(255, 100, 130, 0.9)); /* 改了：新渐变 */
+        color: #fff;                         /* 改了：颜色写法，值与原来相同 */
+        border: 2px solid rgba(255, 255, 255, 0.7); /* 新增：边框 */
+        border-radius:50px;                 /* 改了：原50px */
+        letter-spacing: 2px;                 /* 新增：字间距 */
+        box-shadow: 0 4px 20px rgba(255, 100, 130, 0.5); /* 改了：新阴影 */
+        animation: initialFloat 3s ease-in-out infinite;  /* 悬浮动画 */
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    /* 隐藏初始按钮的平板元素 */
+    .spin-button.initial-btn::before,
+    .spin-button.initial-btn::after {
+        display: none;
+    }
+
+    .spin-button.initial-btn .status-bar {
+        display: none;
+    }
+
+    .spin-button.initial-btn .btn-text {
+        display: none;
+    }
+
+    /* 初始按钮悬停效果 */
+    .spin-button.initial-btn:hover:not(:disabled) {
+        transform: translateX(-50%) translateY(-2px);
+        box-shadow: 0 8px 25px rgba(245, 87, 108, 0.6);
+    }
+
+    .spin-button.initial-btn:active:not(:disabled) {
+        transform: translateX(-50%) translateY(0);
+    }
+
+    .spin-button.initial-btn:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    /* ============================================ */
+    /* 平板电脑按钮样式（隐藏状态） */
+    /* ============================================ */
+    .spin-button.tablet-btn {
+        display: none;
+        position: fixed;
+        bottom: 9.1vh;
+        left: 50%;
+        transform: translateX(-50%);
+        margin-top: 0;
+        z-index: 100;
+
+        /* iPad Air 7 外形 - 横向比例（等比例放大） */
+        width: calc(156px * 1.1);   /* 原值 * 倍数 */
+        height: calc(110px * 1.1);  /* 原值 * 倍数 */
+        padding: 0;
+        transform-origin: center center; /* 缩放基准点 */
+        background: linear-gradient(160deg, #4a4a50 0%, #3a3a40 30%, #2c2c32 70%, #26262c 100%);
+        border: 1.5px solid #1c1c20;
+        border-radius: calc(14px * 1.1); /* 原值 * 倍数 */
+        box-shadow:
+                0 0 0 calc(2.5px * 1.1) #222228,   /* 原值 * 倍数 */
+                0 0 0 calc(3.5px * 1.1) #1a1a1e,  /* 原值 * 倍数 */
+                0 0 0 calc(4px * 1.1) #2a2a30,    /* 原值 * 倍数 */
+                0 calc(8px * 1.1) calc(28px * 1.1) rgba(0, 0, 0, 0.55), /* 原值 * 倍数 */
+                0 calc(2px * 1.1) calc(6px * 1.1) rgba(0, 0, 0, 0.3);   /* 原值 * 倍数 */
+        cursor: pointer;
+        overflow: visible; /* 让摄像头可以超出边框 */
+        animation: tabletFloat 2.5s ease-in-out infinite;
+    }
+
+    /* 显示平板按钮 */
+    .spin-button.tablet-btn.show {
+        display: block;
+    }
+
+    /* 前置摄像头 + 传感器 + 刘海屏（横屏iPad上方居中边缘） */
+    .spin-button.tablet-btn::before {
+        content: '';
+        position: absolute;
+        top: calc(-2px * 1.1); /* 原值 * 倍数 */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 4;
+
+        /* 刘海屏底片 */
+        width: calc(26px * 1.1);  /* 原值 * 倍数 */
+        height: calc(4.5px * 1.1); /* 原值 * 倍数 */
+        border-radius: 0 0 calc(5px * 1.1) calc(5px * 1.1); /* 原值 * 倍数 */
+
+        /* 摄像头（左）和传感器（右） */
+        background:
+            /* 左摄像头 - 多层镀膜镜头 */
+                radial-gradient(circle at 34% 50%,
+                rgba(255,255,255,0.5) calc(0.3px * 1.1),  /* 原值 * 倍数 */
+                transparent calc(0.6px * 1.1)             /* 原值 * 倍数 */
+                ),
+                radial-gradient(circle at 30% 55%,
+                #000 calc(1.2px * 1.1),                   /* 原值 * 倍数 */
+                #0a0a12 calc(1.8px * 1.1),                /* 原值 * 倍数 */
+                #1a1a28 calc(2.3px * 1.1),                /* 原值 * 倍数 */
+                #2e2e40 calc(2.8px * 1.1),                /* 原值 * 倍数 */
+                #3a3a4d calc(3.2px * 1.1),                /* 原值 * 倍数 */
+                transparent calc(3.6px * 1.1)             /* 原值 * 倍数 */
+                ),
+                    /* 右传感器 - 红外窗口质感 */
+                radial-gradient(circle at 70% 50%,
+                rgba(255,255,255,0.3) calc(0.2px * 1.1),  /* 原值 * 倍数 */
+                transparent calc(0.5px * 1.1)             /* 原值 * 倍数 */
+                ),
+                radial-gradient(circle at 72% 55%,
+                #050510 calc(0.8px * 1.1),                /* 原值 * 倍数 */
+                #0d0d1a calc(1.3px * 1.1),                /* 原值 * 倍数 */
+                #1c1c2e calc(1.8px * 1.1),                /* 原值 * 倍数 */
+                #2a2a3d calc(2.2px * 1.1),                /* 原值 * 倍数 */
+                transparent calc(2.6px * 1.1)             /* 原值 * 倍数 */
+                ),
+                    /* 刘海底色 - 深色玻璃面板 */
+                linear-gradient(175deg,
+                #1a1a24 0%,
+                #15151e 40%,
+                #1e1e2a 100%
+                );
+        background-color: #15151e;
+
+        /* 刘海边缘 */
+        box-shadow:
+                0 calc(1px * 1.1) 0 rgba(255, 255, 255, 0.04),   /* 原值 * 倍数 */
+                0 calc(-0.5px * 1.1) 0 rgba(0, 0, 0, 0.3),      /* 原值 * 倍数 */
+                inset 0 calc(0.5px * 1.1) 0 rgba(255, 255, 255, 0.02); /* 原值 * 倍数 */
+    }
+
+    /* 屏幕区域 */
+    .spin-button.tablet-btn::after {
+        content: '';
+        position: absolute;
+        top: calc(7px * 1.1);    /* 原值 * 倍数 */
+        left: calc(8px * 1.1);   /* 原值 * 倍数 */
+        right: calc(8px * 1.1);  /* 原值 * 倍数 */
+        bottom: calc(7px * 1.1); /* 原值 * 倍数 */
+
+        /* 用图片代替纯色背景 */
+        background-image: url('pig2-bg.jpg');  /* 你的屏幕图片 */
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        border-radius: calc(7px * 1.1); /* 原值 * 倍数 */
+        z-index: 0;
+        box-shadow:
+                inset 0 0 calc(2px * 1.1) rgba(0, 0, 0, 0.03),   /* 原值 * 倍数 */
+                inset 0 calc(1px * 1.1) 0 rgba(255, 255, 255, 0.3), /* 原值 * 倍数 */
+                inset 0 calc(-1px * 1.1) 0 rgba(0, 0, 0, 0.03);   /* 原值 * 倍数 */
+    }
+
+    /* 状态栏 */
+    .spin-button.tablet-btn .status-bar {
+        position: absolute;
+        top: calc(6px * 1.1);    /* 原值 * 倍数 */
+        left: calc(8px * 1.1);   /* 原值 * 倍数 */
+        right: calc(8px * 1.1);  /* 原值 * 倍数 */
+        height: calc(14px * 1.1); /* 原值 * 倍数 */
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 2;
+        padding: 0 calc(4px * 1.1); /* 原值 * 倍数 */
+        pointer-events: none;
+        /* 添加阴影让状态栏可见 */
+        background: rgba(0, 0, 0, 0.25);
+        border-radius: calc(3px * 1.1); /* 原值 * 倍数 */
+        box-shadow: 0 calc(1px * 1.1) 0 rgba(0, 0, 0, 0.25), inset 0 0 calc(2px * 1.1) rgba(0, 0, 0, 0.25); /* 原值 * 倍数 */
+    }
+
+    .spin-button.tablet-btn .time {
+        color: rgba(255,255,255,0.75);
+        font-size: calc(8px * 1.1); /* 原值 * 倍数 */
+        font-weight: 600;
+        font-family: -apple-system, "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    .spin-button.tablet-btn .back-link {
+        position: absolute;
+        top: calc(20px * 1.1);     /* 原值 * 倍数 */
+        left: calc(8px * 1.1);     /* 原值 * 倍数 */
+        font-size: calc(9px * 1.1); /* 原值 * 倍数 */
+        font-weight: 400;
+        color: rgba(251, 205, 221, 0.8);
+        cursor: pointer;
+        pointer-events: auto;
+        z-index: 3;
+        letter-spacing: calc(0.5px * 1.1); /* 原值 * 倍数 */
+        font-family: -apple-system, "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        /* ===== 响应范围（文字位置不变，等比例放大） ===== */
+        /* 通过 padding 扩大点击区域，同时用负 margin 抵消偏移，保持文字原位 */
+        padding: calc(6px * 1.1) calc(8px * 1.1);  /* 原值 * 倍数 */
+        margin: calc(-6px * 1.1) calc(-8px * 1.1); /* 原值 * 倍数 */
+        /* ==================================== */
+    }
+
+    .spin-button.tablet-btn .battery {
+        color: rgba(255,255,255,0.75);
+        /*color: #1d1d1f;*/
+        font-size: calc(8px * 1.1); /* 原值 * 倍数 */
+        font-weight: 500;
+        font-family: -apple-system, "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* 按键文字内容及样式 */
+    .spin-button.tablet-btn .btn-text {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+
+        /* 文字基础样式 */
+        background: linear-gradient(135deg,
+        rgba(218, 135, 155, 1) 0%,
+        rgba(244, 185, 206, 1) 20%,
+        rgba(255, 235, 242, 1) 40%,
+        rgba(255, 250, 252, 1) 55%,
+        rgba(250, 195, 214, 1) 75%,
+        rgba(255, 242, 247, 1) 100%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-size: calc(27px * 1.1);      /* 原值 * 倍数 */
+        letter-spacing: calc(2.5px * 1.1); /* 原值 * 倍数 */
+        font-weight: 600;
+        font-family: "STYuanti", "方圆体", "PingFang SC", "Microsoft YaHei", "微软雅黑", sans-serif;
+        line-height: 1.2;
+        text-align: center;
+        padding: calc(37px * 1.1) calc(14px * 1.1) 0 calc(14px * 1.1); /* 原值 * 倍数 */
+        box-sizing: border-box;
+
+        filter: drop-shadow(0 0 calc(6px * 1.1) rgba(255, 170, 195, 0.5))   /* 原值 * 倍数 */
+        drop-shadow(0 0 calc(12px * 1.1) rgba(255, 195, 213, 0.3))           /* 原值 * 倍数 */
+        drop-shadow(0 calc(1px * 1.1) calc(1px * 1.1) rgba(155, 115, 130, 0.25)); /* 原值 * 倍数 */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .spin-button.tablet-btn:hover {
+        transform: translateX(-50%) scale(calc(1.04 * 1.1)); /* 原值 * 倍数 */
+        box-shadow:
+                0 0 0 calc(2.5px * 1.1) #222228,    /* 原值 * 倍数 */
+                0 0 0 calc(3.5px * 1.1) #1a1a1e,   /* 原值 * 倍数 */
+                0 0 0 calc(4px * 1.1) #2a2a30,     /* 原值 * 倍数 */
+                0 calc(12px * 1.1) calc(32px * 1.1) rgba(0, 0, 0, 0.6),  /* 原值 * 倍数 */
+                0 calc(4px * 1.1) calc(10px * 1.1) rgba(0, 0, 0, 0.35);  /* 原值 * 倍数 */
+    }
+
+    .spin-button.tablet-btn:active {
+        transform: translateX(-50%) scale(calc(0.96 * 1.1)); /* 原值 * 倍数 */
+        box-shadow:
+                0 0 0 calc(2.5px * 1.1) #222228,   /* 原值 * 倍数 */
+                0 0 0 calc(3.5px * 1.1) #1a1a1e,  /* 原值 * 倍数 */
+                0 0 0 calc(4px * 1.1) #2a2a30,    /* 原值 * 倍数 */
+                0 calc(2px * 1.1) calc(8px * 1.1) rgba(0, 0, 0, 0.4); /* 原值 * 倍数 */
+        transition: all 0.1s ease;
+    }
+
+    .spin-button.tablet-btn:disabled {
+        opacity: 0;
+        animation: none;
+        filter: brightness(0.7);
+    }
+
+    /* 平板悬浮动画 */
+    @keyframes tabletFloat {
+        0%, 100% {
+            transform: translateX(-50%) translateY(0) scale(1.1); /* 倍数 */
+        }
+        50% {
+            transform: translateX(-50%) translateY(calc(-5px * 1.1)) scale(1.1); /* 原值 * 倍数 */
+        }
+    }
+
+    /* 初始按键悬浮动画 */
+    @keyframes initialFloat {
+        0%, 100% {
+            transform: translateX(-50%) translateY(0);
+        }
+        50% {
+            transform: translateX(-50%) translateY(-7px); /* 初始按钮浮动幅度，改这里 */
+        }
+    }
+
+    .result {
+        background: url('result.jpg') center/cover no-repeat,
+        linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        border-radius: 20px;
+        padding: 40px 50px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        position: relative;
+        min-width: 280px;
+        max-width: 90%;
+        text-align: center;
+        transform: scale(0.5);
+        transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .result-overlay.show .result {
+        transform: scale(1);
+        animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .result-text {
+        margin-bottom: 25px;
+        transform: translateX(-8px) translateY(-30px);
+        opacity: 0.95;
     }
 
     .result-emoji {
         font-size: 2.5em;
+        margin-bottom: 15px;
+        animation: pulse 2s infinite;
+        opacity: 0.9;
+    }
+
+    .result-title {
+        font-size: 1.3em;
+        color: #444;
+        margin-bottom: 10px;
+        font-weight: 530;
+        transform: translateX(15px);
+    }
+
+    /* 显示挑选的食物名字 */
+    .result-food {
+        font-size: 2.5em;
+        font-weight: bold;
+        color: rgba(238, 60, 35);
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 10px;
+    }
+
+    /* 手机端确定按钮 */
+    .close-btn {
+        background: linear-gradient(135deg, rgba(255, 80, 170, 0.75) 0%
+        , rgba(230, 120, 100, 0.75) 100%);
+        color: rgba(255,255,255,0.9);
+        border: none;
+        padding: 7px 27px;
+        font-size: 1.2em;
+        letter-spacing: 2px;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(238, 90, 36, 0.3);
+        font-weight: bold;
+        margin-top: 10px;
+        transform: translateY(8px);
+    }
+
+    /* 覆盖手机端长按和长按移动时确定按键的响应 */
+    .close-btn:hover,
+    .close-btn:active {
+        transform: translateY(8px);  /* 页面的按键值移动就是translateY(8px)，改为一样才有静止效果 */
+        box-shadow: 0 4px 15px rgba(238, 90, 36, 0.3);
+        background: linear-gradient(135deg, rgba(255, 107, 107, 0.75) 0%,
+        rgba(238, 90, 36, 0.75) 100%);  /* 改为和页面原本的按键颜色一样 */
+    }
+
+    /* 手机端右上角关闭键 */
+    .close-icon {
+        pointer-events: auto;
+        top: 2px;    /* 改离上边缘距离 */
+        right: 3px;  /* 改离右边缘距离 */
+        z-index: 10;
+    }
+
+    /* 最上方emoji表情脉冲动画 */
+    @keyframes pulse {
+        0% {
+            transform: translateX(15px) scale(1);
+        }
+        50% {
+            transform: translateX(15px) scale(1.2);
+        }
+        100% {
+            transform: translateX(15px) scale(1);
+        }
     }
 }
