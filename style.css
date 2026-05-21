@@ -7,7 +7,7 @@
 /* 音乐控制按钮 */
 .music-toggle {
     position: fixed;
-    top: 5px;
+    top: 15px;
     left: 15px;
     z-index: 200;
     background: rgba(255, 255, 255, 0.25);
@@ -334,6 +334,7 @@ canvas {
     .music-toggle{
         left: auto;
         right: 5px;
+        top: 5px;
     }
 
     .container {
