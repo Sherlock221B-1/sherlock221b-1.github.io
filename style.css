@@ -4,6 +4,31 @@
     box-sizing: border-box;
 }
 
+/* 音乐控制按钮 */
+.music-toggle {
+    position: fixed;
+    top: 5px;
+    left: 15px;
+    z-index: 200;
+    background: rgba(255, 255, 255, 0.25);
+    border: none;
+    font-size: 1.5em;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+}
+
+.music-toggle:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
 body {
     font-family: 'Microsoft YaHei', Arial, sans-serif;
 
@@ -165,7 +190,7 @@ canvas {
     transform: scale(1);
     animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
- /* 结果显示界面 */
+/* 结果显示界面 */
 .result-text {
     margin-bottom: 25px;
     transform: translateX(-5px)translateY(-30px); /* 往上移，负值越大越往上 */
@@ -242,12 +267,6 @@ canvas {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    /* 只对电脑端生效 */
-    @media(min-width: 601px) {
-        /* ===== 扩大响应区域，位置不变 ===== */
-        padding: 15px;       /* 原没有，扩大点击范围 */
-        margin: -15px;       /* 负值抵消 padding 的偏移 */
-    }
 }
 
 .close-icon:hover {
@@ -302,16 +321,19 @@ canvas {
 /* ============================================ */
 @media (max-width: 600px) {
     /* 手机端背景：竖版9:16图片，转盘放上半区 */
-    @media (max-width: 600px) {
-        body {
-            background-image: url('yier.jpg');
-            align-items: flex-start;
-            padding-top: 10px;
-            padding-left: 10px;
-            padding-right: 10px;
-            padding-bottom: 10px;
-            margin: -26.5px 0;  /* 让整个body块往上提 */
-        }
+    body {
+        background-image: url('yier.jpg');
+        align-items: flex-start;
+        padding-top: 10px;
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 10px;
+        margin: -26.5px 0;  /* 让整个body块往上提 */
+    }
+
+    .music-toggle{
+        left: auto;
+        right: 5px;
     }
 
     .container {
@@ -322,15 +344,16 @@ canvas {
     }
 
     h1 {
-        font-size: 2em;
+        font-size: 1.8em;
         margin-bottom: 15px;
         letter-spacing:2px;
     }
 
     .wheel-container {
         margin: 10px 0;
-        max-width: 395px; /* 原来是继承外面的500px，改小转盘变小 */
-                          /* 420-500没有变化，420以下有变化 */
+        /* 转盘大小 */
+        max-width: 320px; /* 原来是继承外面的500px，改小转盘变小 */
+        /* 420-500没有变化，420以下有变化 */
     }
 
     .pointer {
@@ -349,7 +372,7 @@ canvas {
     /* ============================================ */
     .spin-button.initial-btn {
         position: fixed;
-        bottom: 11vh;
+        bottom: 9.6vh;  /* 距离底部位置 */
         left: 50%;
         transform: translateX(-50%);
         margin-top: 0;
@@ -358,7 +381,7 @@ canvas {
         /* 与电脑端一致的样式 */
         width: auto;
         height: auto;
-        padding: 12px 30px;
+        padding: 11px 28px;
         background: linear-gradient(135deg, rgba(255, 140, 160, 0.9), rgba(255, 100, 130, 0.9)); /* 改了：新渐变 */
         color: #fff;                         /* 改了：颜色写法，值与原来相同 */
         border: 2px solid rgba(255, 255, 255, 0.7); /* 新增：边框 */
@@ -366,7 +389,7 @@ canvas {
         letter-spacing: 2px;                 /* 新增：字间距 */
         box-shadow: 0 4px 20px rgba(255, 100, 130, 0.5); /* 改了：新阴影 */
         animation: initialFloat 3s ease-in-out infinite;  /* 悬浮动画 */
-        font-size: 28px;
+        font-size: 26px;
         font-weight: bold;
     }
 
@@ -401,31 +424,31 @@ canvas {
     }
 
     /* ============================================ */
-    /* 平板电脑按钮样式（隐藏状态） */
+    /* 平板电脑按钮样式（隐藏状态，等比例放大1.05倍） */
     /* ============================================ */
     .spin-button.tablet-btn {
         display: none;
         position: fixed;
-        bottom: 9.1vh;
+        bottom: 4vh;   /* 距离底部位置 */
         left: 50%;
         transform: translateX(-50%);
         margin-top: 0;
         z-index: 100;
 
         /* iPad Air 7 外形 - 横向比例（等比例放大） */
-        width: calc(156px * 1.1);   /* 原值 * 倍数 */
-        height: calc(110px * 1.1);  /* 原值 * 倍数 */
+        width: calc(156px * 1.05);   /* 原值 * 倍数 */
+        height: calc(110px * 1.05);  /* 原值 * 倍数 */
         padding: 0;
         transform-origin: center center; /* 缩放基准点 */
         background: linear-gradient(160deg, #4a4a50 0%, #3a3a40 30%, #2c2c32 70%, #26262c 100%);
         border: 1.5px solid #1c1c20;
-        border-radius: calc(14px * 1.1); /* 原值 * 倍数 */
+        border-radius: calc(14px * 1.05); /* 原值 * 倍数 */
         box-shadow:
-                0 0 0 calc(2.5px * 1.1) #222228,   /* 原值 * 倍数 */
-                0 0 0 calc(3.5px * 1.1) #1a1a1e,  /* 原值 * 倍数 */
-                0 0 0 calc(4px * 1.1) #2a2a30,    /* 原值 * 倍数 */
-                0 calc(8px * 1.1) calc(28px * 1.1) rgba(0, 0, 0, 0.55), /* 原值 * 倍数 */
-                0 calc(2px * 1.1) calc(6px * 1.1) rgba(0, 0, 0, 0.3);   /* 原值 * 倍数 */
+                0 0 0 calc(2.5px * 1.05) #222228,   /* 原值 * 倍数 */
+                0 0 0 calc(3.5px * 1.05) #1a1a1e,  /* 原值 * 倍数 */
+                0 0 0 calc(4px * 1.05) #2a2a30,    /* 原值 * 倍数 */
+                0 calc(8px * 1.05) calc(28px * 1.05) rgba(0, 0, 0, 0.55), /* 原值 * 倍数 */
+                0 calc(2px * 1.05) calc(6px * 1.05) rgba(0, 0, 0, 0.3);   /* 原值 * 倍数 */
         cursor: pointer;
         overflow: visible; /* 让摄像头可以超出边框 */
         animation: tabletFloat 2.5s ease-in-out infinite;
@@ -440,42 +463,42 @@ canvas {
     .spin-button.tablet-btn::before {
         content: '';
         position: absolute;
-        top: calc(-2px * 1.1); /* 原值 * 倍数 */
+        top: calc(-2px * 1.05); /* 原值 * 倍数 */
         left: 50%;
         transform: translateX(-50%);
         z-index: 4;
 
         /* 刘海屏底片 */
-        width: calc(26px * 1.1);  /* 原值 * 倍数 */
-        height: calc(4.5px * 1.1); /* 原值 * 倍数 */
-        border-radius: 0 0 calc(5px * 1.1) calc(5px * 1.1); /* 原值 * 倍数 */
+        width: calc(26px * 1.05);  /* 原值 * 倍数 */
+        height: calc(4.5px * 1.05); /* 原值 * 倍数 */
+        border-radius: 0 0 calc(5px * 1.05) calc(5px * 1.05); /* 原值 * 倍数 */
 
         /* 摄像头（左）和传感器（右） */
         background:
             /* 左摄像头 - 多层镀膜镜头 */
                 radial-gradient(circle at 34% 50%,
-                rgba(255,255,255,0.5) calc(0.3px * 1.1),  /* 原值 * 倍数 */
-                transparent calc(0.6px * 1.1)             /* 原值 * 倍数 */
+                rgba(255,255,255,0.5) calc(0.3px * 1.05),  /* 原值 * 倍数 */
+                transparent calc(0.6px * 1.05)             /* 原值 * 倍数 */
                 ),
                 radial-gradient(circle at 30% 55%,
-                #000 calc(1.2px * 1.1),                   /* 原值 * 倍数 */
-                #0a0a12 calc(1.8px * 1.1),                /* 原值 * 倍数 */
-                #1a1a28 calc(2.3px * 1.1),                /* 原值 * 倍数 */
-                #2e2e40 calc(2.8px * 1.1),                /* 原值 * 倍数 */
-                #3a3a4d calc(3.2px * 1.1),                /* 原值 * 倍数 */
-                transparent calc(3.6px * 1.1)             /* 原值 * 倍数 */
+                #000 calc(1.2px * 1.05),                   /* 原值 * 倍数 */
+                #0a0a12 calc(1.8px * 1.05),                /* 原值 * 倍数 */
+                #1a1a28 calc(2.3px * 1.05),                /* 原值 * 倍数 */
+                #2e2e40 calc(2.8px * 1.05),                /* 原值 * 倍数 */
+                #3a3a4d calc(3.2px * 1.05),                /* 原值 * 倍数 */
+                transparent calc(3.6px * 1.05)             /* 原值 * 倍数 */
                 ),
                     /* 右传感器 - 红外窗口质感 */
                 radial-gradient(circle at 70% 50%,
-                rgba(255,255,255,0.3) calc(0.2px * 1.1),  /* 原值 * 倍数 */
-                transparent calc(0.5px * 1.1)             /* 原值 * 倍数 */
+                rgba(255,255,255,0.3) calc(0.2px * 1.05),  /* 原值 * 倍数 */
+                transparent calc(0.5px * 1.05)             /* 原值 * 倍数 */
                 ),
                 radial-gradient(circle at 72% 55%,
-                #050510 calc(0.8px * 1.1),                /* 原值 * 倍数 */
-                #0d0d1a calc(1.3px * 1.1),                /* 原值 * 倍数 */
-                #1c1c2e calc(1.8px * 1.1),                /* 原值 * 倍数 */
-                #2a2a3d calc(2.2px * 1.1),                /* 原值 * 倍数 */
-                transparent calc(2.6px * 1.1)             /* 原值 * 倍数 */
+                #050510 calc(0.8px * 1.05),                /* 原值 * 倍数 */
+                #0d0d1a calc(1.3px * 1.05),                /* 原值 * 倍数 */
+                #1c1c2e calc(1.8px * 1.05),                /* 原值 * 倍数 */
+                #2a2a3d calc(2.2px * 1.05),                /* 原值 * 倍数 */
+                transparent calc(2.6px * 1.05)             /* 原值 * 倍数 */
                 ),
                     /* 刘海底色 - 深色玻璃面板 */
                 linear-gradient(175deg,
@@ -487,19 +510,19 @@ canvas {
 
         /* 刘海边缘 */
         box-shadow:
-                0 calc(1px * 1.1) 0 rgba(255, 255, 255, 0.04),   /* 原值 * 倍数 */
-                0 calc(-0.5px * 1.1) 0 rgba(0, 0, 0, 0.3),      /* 原值 * 倍数 */
-                inset 0 calc(0.5px * 1.1) 0 rgba(255, 255, 255, 0.02); /* 原值 * 倍数 */
+                0 calc(1px * 1.05) 0 rgba(255, 255, 255, 0.04),   /* 原值 * 倍数 */
+                0 calc(-0.5px * 1.05) 0 rgba(0, 0, 0, 0.3),      /* 原值 * 倍数 */
+                inset 0 calc(0.5px * 1.05) 0 rgba(255, 255, 255, 0.02); /* 原值 * 倍数 */
     }
 
     /* 屏幕区域 */
     .spin-button.tablet-btn::after {
         content: '';
         position: absolute;
-        top: calc(7px * 1.1);    /* 原值 * 倍数 */
-        left: calc(8px * 1.1);   /* 原值 * 倍数 */
-        right: calc(8px * 1.1);  /* 原值 * 倍数 */
-        bottom: calc(7px * 1.1); /* 原值 * 倍数 */
+        top: calc(7px * 1.05);    /* 原值 * 倍数 */
+        left: calc(8px * 1.05);   /* 原值 * 倍数 */
+        right: calc(8px * 1.05);  /* 原值 * 倍数 */
+        bottom: calc(7px * 1.05); /* 原值 * 倍数 */
 
         /* 用图片代替纯色背景 */
         background-image: url('pig2-bg.jpg');  /* 你的屏幕图片 */
@@ -507,36 +530,36 @@ canvas {
         background-position: center;
         background-repeat: no-repeat;
 
-        border-radius: calc(7px * 1.1); /* 原值 * 倍数 */
+        border-radius: calc(7px * 1.05); /* 原值 * 倍数 */
         z-index: 0;
         box-shadow:
-                inset 0 0 calc(2px * 1.1) rgba(0, 0, 0, 0.03),   /* 原值 * 倍数 */
-                inset 0 calc(1px * 1.1) 0 rgba(255, 255, 255, 0.3), /* 原值 * 倍数 */
-                inset 0 calc(-1px * 1.1) 0 rgba(0, 0, 0, 0.03);   /* 原值 * 倍数 */
+                inset 0 0 calc(2px * 1.05) rgba(0, 0, 0, 0.03),   /* 原值 * 倍数 */
+                inset 0 calc(1px * 1.05) 0 rgba(255, 255, 255, 0.3), /* 原值 * 倍数 */
+                inset 0 calc(-1px * 1.05) 0 rgba(0, 0, 0, 0.03);   /* 原值 * 倍数 */
     }
 
     /* 状态栏 */
     .spin-button.tablet-btn .status-bar {
         position: absolute;
-        top: calc(6px * 1.1);    /* 原值 * 倍数 */
-        left: calc(8px * 1.1);   /* 原值 * 倍数 */
-        right: calc(8px * 1.1);  /* 原值 * 倍数 */
-        height: calc(14px * 1.1); /* 原值 * 倍数 */
+        top: calc(6px * 1.05);    /* 原值 * 倍数 */
+        left: calc(8px * 1.05);   /* 原值 * 倍数 */
+        right: calc(8px * 1.05);  /* 原值 * 倍数 */
+        height: calc(14px * 1.05); /* 原值 * 倍数 */
         display: flex;
         justify-content: space-between;
         align-items: center;
         z-index: 2;
-        padding: 0 calc(4px * 1.1); /* 原值 * 倍数 */
+        padding: 0 calc(4px * 1.05); /* 原值 * 倍数 */
         pointer-events: none;
         /* 添加阴影让状态栏可见 */
         background: rgba(0, 0, 0, 0.25);
-        border-radius: calc(3px * 1.1); /* 原值 * 倍数 */
-        box-shadow: 0 calc(1px * 1.1) 0 rgba(0, 0, 0, 0.25), inset 0 0 calc(2px * 1.1) rgba(0, 0, 0, 0.25); /* 原值 * 倍数 */
+        border-radius: calc(3px * 1.05); /* 原值 * 倍数 */
+        box-shadow: 0 calc(1px * 1.05) 0 rgba(0, 0, 0, 0.25), inset 0 0 calc(2px * 1.05) rgba(0, 0, 0, 0.25); /* 原值 * 倍数 */
     }
 
     .spin-button.tablet-btn .time {
         color: rgba(255,255,255,0.75);
-        font-size: calc(8px * 1.1); /* 原值 * 倍数 */
+        font-size: calc(8px * 1.05); /* 原值 * 倍数 */
         font-weight: 600;
         font-family: -apple-system, "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -544,28 +567,28 @@ canvas {
 
     .spin-button.tablet-btn .back-link {
         position: absolute;
-        top: calc(20px * 1.1);     /* 原值 * 倍数 */
-        left: calc(8px * 1.1);     /* 原值 * 倍数 */
-        font-size: calc(9px * 1.1); /* 原值 * 倍数 */
+        top: calc(20px * 1.05);     /* 原值 * 倍数 */
+        left: calc(8px * 1.05);     /* 原值 * 倍数 */
+        font-size: calc(9px * 1.05); /* 原值 * 倍数 */
         font-weight: 400;
         color: rgba(251, 205, 221, 0.8);
         cursor: pointer;
         pointer-events: auto;
         z-index: 3;
-        letter-spacing: calc(0.5px * 1.1); /* 原值 * 倍数 */
+        letter-spacing: calc(0.5px * 1.05); /* 原值 * 倍数 */
         font-family: -apple-system, "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif;
         -webkit-font-smoothing: antialiased;
         /* ===== 响应范围（文字位置不变，等比例放大） ===== */
         /* 通过 padding 扩大点击区域，同时用负 margin 抵消偏移，保持文字原位 */
-        padding: calc(6px * 1.1) calc(8px * 1.1);  /* 原值 * 倍数 */
-        margin: calc(-6px * 1.1) calc(-8px * 1.1); /* 原值 * 倍数 */
+        padding: calc(6px * 1.05) calc(8px * 1.05);  /* 原值 * 倍数 */
+        margin: calc(-6px * 1.05) calc(-8px * 1.05); /* 原值 * 倍数 */
         /* ==================================== */
     }
 
     .spin-button.tablet-btn .battery {
         color: rgba(255,255,255,0.75);
         /*color: #1d1d1f;*/
-        font-size: calc(8px * 1.1); /* 原值 * 倍数 */
+        font-size: calc(8px * 1.05); /* 原值 * 倍数 */
         font-weight: 500;
         font-family: -apple-system, "SF Pro Display", "PingFang SC", "Helvetica Neue", sans-serif;
         -webkit-font-smoothing: antialiased;
@@ -595,39 +618,39 @@ canvas {
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
-        font-size: calc(27px * 1.1);      /* 原值 * 倍数 */
-        letter-spacing: calc(2.5px * 1.1); /* 原值 * 倍数 */
+        font-size: calc(27px * 1.05);      /* 原值 * 倍数 */
+        letter-spacing: calc(2.5px * 1.05); /* 原值 * 倍数 */
         font-weight: 600;
         font-family: "STYuanti", "方圆体", "PingFang SC", "Microsoft YaHei", "微软雅黑", sans-serif;
         line-height: 1.2;
         text-align: center;
-        padding: calc(37px * 1.1) calc(14px * 1.1) 0 calc(14px * 1.1); /* 原值 * 倍数 */
+        padding: calc(37px * 1.05) calc(14px * 1.05) 0 calc(14px * 1.05); /* 原值 * 倍数 */
         box-sizing: border-box;
 
-        filter: drop-shadow(0 0 calc(6px * 1.1) rgba(255, 170, 195, 0.5))   /* 原值 * 倍数 */
-        drop-shadow(0 0 calc(12px * 1.1) rgba(255, 195, 213, 0.3))           /* 原值 * 倍数 */
-        drop-shadow(0 calc(1px * 1.1) calc(1px * 1.1) rgba(155, 115, 130, 0.25)); /* 原值 * 倍数 */
+        filter: drop-shadow(0 0 calc(6px * 1.05) rgba(255, 170, 195, 0.5))   /* 原值 * 倍数 */
+        drop-shadow(0 0 calc(12px * 1.05) rgba(255, 195, 213, 0.3))           /* 原值 * 倍数 */
+        drop-shadow(0 calc(1px * 1.05) calc(1px * 1.05) rgba(155, 115, 130, 0.25)); /* 原值 * 倍数 */
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
     }
 
     .spin-button.tablet-btn:hover {
-        transform: translateX(-50%) scale(calc(1.04 * 1.1)); /* 原值 * 倍数 */
+        transform: translateX(-50%) scale(calc(1.04 * 1.05)); /* 原值 * 倍数 */
         box-shadow:
-                0 0 0 calc(2.5px * 1.1) #222228,    /* 原值 * 倍数 */
-                0 0 0 calc(3.5px * 1.1) #1a1a1e,   /* 原值 * 倍数 */
-                0 0 0 calc(4px * 1.1) #2a2a30,     /* 原值 * 倍数 */
-                0 calc(12px * 1.1) calc(32px * 1.1) rgba(0, 0, 0, 0.6),  /* 原值 * 倍数 */
-                0 calc(4px * 1.1) calc(10px * 1.1) rgba(0, 0, 0, 0.35);  /* 原值 * 倍数 */
+                0 0 0 calc(2.5px * 1.05) #222228,    /* 原值 * 倍数 */
+                0 0 0 calc(3.5px * 1.05) #1a1a1e,   /* 原值 * 倍数 */
+                0 0 0 calc(4px * 1.05) #2a2a30,     /* 原值 * 倍数 */
+                0 calc(12px * 1.05) calc(32px * 1.05) rgba(0, 0, 0, 0.6),  /* 原值 * 倍数 */
+                0 calc(4px * 1.05) calc(10px * 1.05) rgba(0, 0, 0, 0.35);  /* 原值 * 倍数 */
     }
 
     .spin-button.tablet-btn:active {
-        transform: translateX(-50%) scale(calc(0.96 * 1.1)); /* 原值 * 倍数 */
+        transform: translateX(-50%) scale(calc(0.96 * 1.05)); /* 原值 * 倍数 */
         box-shadow:
-                0 0 0 calc(2.5px * 1.1) #222228,   /* 原值 * 倍数 */
-                0 0 0 calc(3.5px * 1.1) #1a1a1e,  /* 原值 * 倍数 */
-                0 0 0 calc(4px * 1.1) #2a2a30,    /* 原值 * 倍数 */
-                0 calc(2px * 1.1) calc(8px * 1.1) rgba(0, 0, 0, 0.4); /* 原值 * 倍数 */
+                0 0 0 calc(2.5px * 1.05) #222228,   /* 原值 * 倍数 */
+                0 0 0 calc(3.5px * 1.05) #1a1a1e,  /* 原值 * 倍数 */
+                0 0 0 calc(4px * 1.05) #2a2a30,    /* 原值 * 倍数 */
+                0 calc(2px * 1.05) calc(8px * 1.05) rgba(0, 0, 0, 0.4); /* 原值 * 倍数 */
         transition: all 0.1s ease;
     }
 
@@ -640,10 +663,10 @@ canvas {
     /* 平板悬浮动画 */
     @keyframes tabletFloat {
         0%, 100% {
-            transform: translateX(-50%) translateY(0) scale(1.1); /* 倍数 */
+            transform: translateX(-50%) translateY(0) scale(1.05); /* 倍数 */
         }
         50% {
-            transform: translateX(-50%) translateY(calc(-5px * 1.1)) scale(1.1); /* 原值 * 倍数 */
+            transform: translateX(-50%) translateY(calc(-5px * 1.05)) scale(1.05); /* 原值 * 倍数 */
         }
     }
 
@@ -653,7 +676,7 @@ canvas {
             transform: translateX(-50%) translateY(0);
         }
         50% {
-            transform: translateX(-50%) translateY(-7px); /* 初始按钮浮动幅度，改这里 */
+            transform: translateX(-50%) translateY(-5px); /* 初始按钮浮动幅度，改这里 */
         }
     }
 
