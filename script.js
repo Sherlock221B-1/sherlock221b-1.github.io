@@ -363,6 +363,9 @@ function switchToTabletButton() {
     // 先移除初始按钮类
     spinBtn.classList.remove('initial-btn');
 
+    spinBtn.style.animation = '';
+    void spinBtn.offsetWidth;
+
     // 添加平板按钮类并显示
     spinBtn.classList.add('tablet-btn', 'show');
 
@@ -385,6 +388,13 @@ function switchToInitialButton() {
 
     // 添加初始按钮类
     spinBtn.classList.add('initial-btn');
+
+    // 清除可能残留的内联样式
+    spinBtn.style.animation = '';
+
+    // 强制重排后重新应用动画
+    void spinBtn.offsetWidth;
+    spinBtn.style.animation = 'initialFloat 3s ease-in-out infinite';
 
     // 恢复初始按钮内容
     spinBtn.innerHTML = '召唤猪猪';
@@ -443,3 +453,32 @@ document.addEventListener('keydown', (e) => {
         hideResult();
     }
 });
+
+// ============================================
+// 背景音乐控制
+// ============================================
+const bgMusic = document.getElementById('bgMusic');
+const musicToggle = document.getElementById('musicToggle');
+let musicPlaying = false;
+
+musicToggle.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (musicPlaying) {
+        bgMusic.pause();
+        musicToggle.textContent = '🔇';
+    } else {
+        bgMusic.play().catch(() => {});
+        musicToggle.textContent = '🔊';
+    }
+    musicPlaying = !musicPlaying;
+});
+
+// 首次用户交互后自动播放
+document.addEventListener('click', function autoPlay() {
+    if (!musicPlaying) {
+        bgMusic.play().catch(() => {});
+        musicToggle.textContent = '🔊';
+        musicPlaying = true;
+    }
+}, { once: true });
+
